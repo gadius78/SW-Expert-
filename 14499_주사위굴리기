@@ -13,7 +13,7 @@ int dir[5][2] = { // 좌표 움직임
 	{0,1},{0,-1},{-1,0},{1,0}
 };
 
-typedef struct zu {
+typedef struct zu {// 움직임에 따른 주사위 배치 변환에 
 	int top;
 	int north;
 	int east;
