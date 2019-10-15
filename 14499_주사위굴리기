@@ -1,0 +1,189 @@
+#include<algorithm>
+#include<iostream>
+#include<deque>
+#include<vector>
+#include<string>
+using namespace std;
+
+int N, M;
+int x, y, K;
+vector<int> cmd_arr;
+int map[22][22] = { 0, };
+int dir[5][2] = { // 좌표 움직임
+	{0,1},{0,-1},{-1,0},{1,0}
+};
+
+typedef struct zu {
+	int top;
+	int north;
+	int east;
+	int west;
+	int south;
+	int bottom;
+	void init() {
+		this->top = 0;
+		this->north = 0;
+		this->east = 0;
+		this->west = 0;
+		this->south = 0;
+		this->bottom = 0;
+	}
+	void print() {
+		printf("%d\n", top);
+		printf("%d\n", north);
+		printf("%d\n", east);
+		printf("%d\n", west);
+		printf("%d\n", south);
+		printf("%d\n", bottom);
+
+	}
+}Zu;
+bool isrange(int x, int y) {
+	if (0 > x || 0 > y || x >= N || y >= M) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+Zu a; // 주사위 상태
+void rotate(int cmd) {
+	int t0 = a.top;
+	int t1 = a.north;
+	int t2 = a.east;
+	int t3 = a.west;
+	int t4 = a.south;
+	int t5 = a.bottom;
+
+	switch (cmd) {
+	case 1:
+		a.top = t3;
+		a.north = t1;
+		a.east = t0;
+		a.west = t5;
+		a.south = t4;
+		a.bottom = t2;
+		break;
+	case 2:
+		a.top = t2;
+		a.north = t1;
+		a.east = t5;
+		a.west = t0;
+		a.south = t4;
+		a.bottom = t3;
+		break;
+	case 3:
+		a.top = t4;
+		a.north = t0;
+		a.east = t2;
+		a.west = t3;
+		a.south = t5;
+		a.bottom = t1;	
+		break;
+	case 4:
+		a.top = t1;
+		a.north = t5;
+		a.east = t2;
+		a.west = t3;
+		a.south = t0;
+		a.bottom = t4;
+		break;
+	}
+}
+
+void solve() {
+	int next_x = x;
+	int next_y = y;
+
+	for (int idx = 0; idx < cmd_arr.size(); idx++) {
+		switch (cmd_arr[idx]) { // 주사위는 최대 명령어의 갯수만큼 움직인다. 
+
+		case 1:
+			if (isrange(next_x + dir[0][0], next_y + dir[0][1])) {
+				next_x = next_x + dir[0][0];
+				next_y = next_y + dir[0][1];
+				rotate(1);
+				if (map[next_x][next_y] == 0) {
+					map[next_x][next_y] = a.bottom;
+				}
+				else {
+					a.bottom = map[next_x][next_y];
+					map[next_x][next_y] = 0;
+				}
+				cout << a.top << endl;
+			}
+			break;
+
+		case 2:
+			if (isrange(next_x + dir[1][0], next_y + dir[1][1])) {
+				next_x = next_x + dir[1][0];
+				next_y = next_y + dir[1][1];
+				rotate(2);
+				if (map[next_x][next_y] == 0) {
+					map[next_x][next_y] = a.bottom;
+				}
+				else {
+					a.bottom = map[next_x][next_y];
+					map[next_x][next_y] = 0;
+				}
+				cout << a.top << endl;
+			}
+			break;
+
+		case 3:
+			if (isrange(next_x + dir[2][0], next_y + dir[2][1])) {
+				next_x = next_x + dir[2][0];
+				next_y = next_y + dir[2][1];
+				rotate(3);
+				if (map[next_x][next_y] == 0) {
+					map[next_x][next_y] = a.bottom;
+				}
+				else {
+					a.bottom = map[next_x][next_y];
+					map[next_x][next_y] = 0;
+				}
+				cout << a.top << endl;
+			}
+			break;
+
+		case 4:
+			if (isrange(next_x + dir[3][0], next_y + dir[3][1])) {
+				next_x = next_x + dir[3][0];
+				next_y = next_y + dir[3][1];
+				rotate(4);
+				if (map[next_x][next_y] == 0) {
+					map[next_x][next_y] = a.bottom;
+				}
+				else {
+					a.bottom = map[next_x][next_y];
+					map[next_x][next_y] = 0;
+				}
+				cout << a.top << endl;
+			}
+			break;
+		}
+	}
+}
+
+int main() {
+
+	
+	int temp;
+	scanf(" %d %d %d %d %d", &N, &M, &x, &y, &K );
+	
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			scanf(" %d", &map[i][j]);
+		}
+	}
+	
+	for (int idx = 0; idx < K; idx++) {
+		scanf(" %d", &temp);
+		cmd_arr.push_back(temp);
+	}
+	a.init();
+	solve();
+	
+	return 0;
+}
