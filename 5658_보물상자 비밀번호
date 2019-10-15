@@ -1,0 +1,68 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<algorithm>
+#include<iostream>
+#include<deque>
+#include<vector>
+#include<string>
+using namespace std;
+
+int N, K;
+int max_cnt = 0;
+deque<char> q;
+vector<int> v;
+vector<int> check;
+int solve(int N, int K) {
+
+	int max_value = 0;
+	int bound = N / 4; // 변당 배치되는 숫자
+	for (int i = 0; i < bound; i++) {
+		//check
+		for (int j = 0; j < N; j += bound) {
+			string s;
+			for (int idx = j; idx < j + bound; idx++) {
+				s += q[idx];
+			}
+			int tt = stoi(s, nullptr, 16); // 16진수를 10진수로
+			v.push_back(tt);
+		}
+
+		/* rotate */
+		int t = q.front();
+		q.pop_front();
+		q.push_back(t);
+	}
+
+	//오름차순으로 정렬하고 K개를 센다
+	sort(v.begin(), v.end(), greater<int>());
+	int cnt = 1;
+	for (int i = 0; i < v.size(); i++) {
+		if (cnt == K) {
+			return v[i];
+			break;
+		}
+		if (count(check.begin(), check.end(), v[i]) == 0) {
+			cnt++;
+			check.push_back(v[i]);
+		}
+	}
+}
+
+int main() {
+
+	int T = 0;
+	char temp1;
+	scanf(" %d", &T);
+	for (int idx = 0; idx < T; idx++) {
+		scanf(" %d %d", &N, &K);
+		for (int j = 0; j < N; j++) {
+			scanf(" %1c", &temp1); //입력버퍼 주의
+			q.push_back(temp1);
+		}
+		int result = solve(N, K);
+		printf("#%d %d\n", idx + 1, result);
+		v.clear();
+		q.clear();
+	}
+
+	return 0;
+}
