@@ -1,0 +1,106 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue> 
+#include<deque>
+#include<string>
+#include<memory.h>
+#include<stdlib.h>
+
+using namespace std;
+
+int K;
+
+deque<int> q[4];
+bool visit[4] = { false, };
+int is_turn[4] = { 0, };
+
+void turn_queue(int queue_num, int dir) {
+	if (dir == 1) {
+		int temp = q[queue_num].back();
+		q[queue_num].push_front(temp);
+		q[queue_num].pop_back();
+	}
+	else if (dir == -1) {
+		int temp = q[queue_num].front();
+		q[queue_num].push_back(temp);
+		q[queue_num].pop_front();
+	}
+
+}
+
+void rotate_check(int rot, int dir) {
+	visit[rot] = true;
+	is_turn[rot] = dir;
+	if (rot + 1 < 4) {
+		if (q[rot + 1][6] != q[rot][2]) {
+			if (!visit[rot + 1]) rotate_check(rot + 1, (-1) *dir);
+		}
+	}
+
+	if (rot - 1 >= 0) {
+		if (q[rot - 1][2] != q[rot][6]) {
+			if (!visit[rot - 1]) rotate_check(rot - 1, (-1) *dir);
+		}
+	}
+
+}
+
+
+int main() {
+	int temp = 0;
+	int T;
+	scanf(" %d", &T);
+
+	for (int idx = 1; idx <= T; idx++) {
+		scanf(" %d", &K);
+        for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 8; j++) {
+				scanf(" %d", &temp);
+				q[i].push_back(temp);
+			}
+		}
+		
+		int t1, t2;
+		for (int i = 0; i < K; i++) {
+			scanf(" %d %d", &t1, &t2);
+			rotate_check(t1 - 1, t2);
+
+			for (int j = 0; j < 4; j++) {
+				turn_queue(j, is_turn[j]);
+
+			}
+
+			memset(visit, false, sizeof(visit));
+			memset(is_turn, 0, sizeof(is_turn));
+		}
+		int sum = 0;
+		for (int i = 0; i < 4; i++) {
+			switch (i) {
+			case 0:
+				if (q[i][0] == 0) sum += 0;
+				else if (q[i][0] == 1) sum += 1;
+				break;
+			case 1:
+				if (q[i][0] == 0) sum += 0;
+				else if (q[i][0] == 1) sum += 2;
+				break;
+			case 2:
+				if (q[i][0] == 0) sum += 0;
+				else if (q[i][0] == 1) sum += 4;
+				break;
+			case 3:
+				if (q[i][0] == 0) sum += 0;
+				else if (q[i][0] == 1) sum += 8;
+				break;
+			}
+		}
+		printf("#%d %d\n",idx,sum);
+		for (int i = 0; i < 4; i++) {
+			q[i].clear();
+		}
+	}
+
+
+	return 0;
+}
