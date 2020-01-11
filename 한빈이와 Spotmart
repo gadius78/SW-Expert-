@@ -1,0 +1,63 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<numeric>
+#include<memory.h>
+using namespace std;
+
+int T;
+int N, M;
+
+bool arr[11] = { false };
+vector<int> v;
+
+
+int sol() {
+	int result = -1;
+	int accum = 0;
+
+	for (int i = 0; i < v.size()-1; i++) {
+		accum = 0;
+		if (v[i] >= M) continue;
+		for (int j = i+1; j < v.size(); j++) {
+			if (v[i] >= M) continue;
+			if (v[i] + v[j] > M) continue;
+
+			if (v[i] + v[j] == M) return M;
+
+			accum = v[i] + v[j];
+			result = max(accum, result);
+
+		}
+		
+	}
+
+	return result;
+}
+
+int main() {
+	clock_t start = clock();
+
+	cin >> T;
+	int t1;
+	int result = 0;
+	for (int i = 1; i <= T; i++) {
+
+		scanf(" %d %d", &N,&M);
+
+		for (int j = 0; j < N; j++) {
+			scanf("%d", &t1);
+			v.push_back(t1);
+		}
+		result = sol();
+
+		printf("#%d %d\n",i , result);
+		v.clear();
+	
+	}
+	clock_t end = clock();
+	printf("Time : %lf\n", (double)(end - start) / CLOCKS_PER_SEC);
+		
+	return 0;
+}
