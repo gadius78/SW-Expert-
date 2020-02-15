@@ -1,91 +1,79 @@
 #include<iostream>
 #include<vector>
 #include<algorithm>
-#include<queue> 
-#include<string>
-#include<fstream>
-
-
 
 using namespace std;
 
-vector<int> v;
-int N;
+int T;
+int N, M,K;
+int result = 0;
 
-int arr[17][17] = { 0, };
+int arr[101][101];
 
-void solve(int dddd) {
-	for (int i = 0; i < N/2; i++) {
-		v.push_back(1);
-		v.push_back(0);
+
+int sol() {
+
+	vector<int> v;
+	for (int i = 0; i < N; i++) {
+		if (i < N / 2) {
+			v.push_back(1);
+		}
+		else {
+			v.push_back(0);
+		}
 	}
 	sort(v.begin(), v.end());
 
-	vector<int> var1;
-	vector<int> var2;
-	long int min_value = 9999999;
-
-
+	int result = 10000000;
 	do {
+	//	cout << "start " << endl;
 
-		for (int i = 0; i < v.size(); i++) {
-			if (v[i] == 1) var1.push_back(i);
-			else {
-				var2.push_back(i);
+		int t1 = 0;
+		for (int i = 0; i < N-1; i++) {
+			for (int j = i+1; j < N; j++) {
+				if (v[i] == 1 && v[j] == 1) {
+				//	cout << i << " / " << j << endl;
+					t1 += arr[i][j] + arr[j][i];
+				}
 			}
 		}
-		sort(var1.begin(), var1.end());
-		sort(var2.begin(), var2.end());
-
-		long int accum1 = 0;
-		long int accum2 = 0;
-		for (int i = 0; i < var1.size()-1; i++) {
-			for (int j = i+1; j < var1.size(); j++) {
-				accum1 += arr[var1[i]][var1[j]] + arr[var1[j]][var1[i]];
+		int t2 = 0;
+		for (int i = 0; i < N - 1; i++) {
+			for (int j = i + 1; j < N; j++) {
+				if (v[i] == 0 && v[j] == 0) {
+				//	cout << i << " / " << j << endl;
+					t2 += arr[i][j] + arr[j][i];
+				}
 			}
 		}
-
-		for (int i = 0; i < var2.size() - 1; i++) {
-			for (int j = i+1; j < var2.size(); j++) {
-				accum2 += arr[var2[i]][var2[j]] + arr[var2[j]][var2[i]];
-			}
-		}
-
-		long temp_sum = abs(accum1 - accum2);
-		
-		if (temp_sum < min_value) {
-			min_value = temp_sum;
-
-		}
-
-	var1.clear();
-		var2.clear();
-
-
+		result = min(result, abs(t1 - t2));
+	
 	} while (next_permutation(v.begin(), v.end()));
+	
+	return result;
 
-	printf("#%d %d\n", dddd, min_value);
-	v.clear();
 }
 
 
+
 int main() {
-
-	int T;
+	int M;
 	scanf(" %d", &T);
-
-	for (int idx = 1; idx <= T; idx++) {
-
+	
+	
+	for (int ii = 1; ii <= T; ii++) {
 		scanf(" %d", &N);
+		
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
 				scanf(" %d", &arr[i][j]);
 			}
 		}
-		solve(idx);
-	
+
+		int result = sol();
+
+		printf("#%d %d\n", ii,result);
+
 	}
-
-
 	return 0;
 }
